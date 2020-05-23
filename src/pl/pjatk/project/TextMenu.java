@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
+import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -33,9 +34,11 @@ public class TextMenu extends Application {
         AnchorPane root = new AnchorPane();
         GridPane texts = new GridPane();
         GridPane radio = new GridPane();
-        TextField input = new TextField("test text");
-        TextField output = new TextField("text test");
+        TextField input = new TextField();
+        TextField output = new TextField();
         ToggleGroup groupCrypt = new ToggleGroup();
+        MyBox box = new MyBox(150.0, 150.0, 150.0);
+        PerspectiveCamera camera = new PerspectiveCamera(false);
 
 
         texts.setVgap(5);
@@ -75,7 +78,10 @@ public class TextMenu extends Application {
         radio.add(DESCipherRadio, 0, 2);
         radio.add(secretKeyFieldDES, 1, 2);
 
-        root.getChildren().addAll(texts, radio, btn);
+        root.getChildren().addAll(texts, radio, box, btn);
+
+        AnchorPane.setBottomAnchor(box, 150.0);
+        AnchorPane.setRightAnchor(box, 50.0);
 
         AnchorPane.setTopAnchor(radio, 250.0);
         AnchorPane.setBottomAnchor(radio, 250.0);
@@ -88,8 +94,9 @@ public class TextMenu extends Application {
         AnchorPane.setTopAnchor(texts, 50.0);
         AnchorPane.setLeftAnchor(texts, 30.0);
         AnchorPane.setRightAnchor(texts, 30.0);
-
-        textStage.setScene(new Scene(root, 600, 500));
+        Scene scene = new Scene(root, 600, 500);
+        scene.setCamera(camera);
+        textStage.setScene(scene);
         textStage.show();
 
         btn.setOnAction(new EventHandler<ActionEvent>() {
