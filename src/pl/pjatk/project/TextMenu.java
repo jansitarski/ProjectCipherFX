@@ -19,10 +19,6 @@ import java.security.NoSuchAlgorithmException;
 import static pl.pjatk.project.Crypto.*;
 
 public class TextMenu extends Application {
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     private SecretKey secretKeyAES;
     private SecretKey secretKeyDES;
 
@@ -32,7 +28,7 @@ public class TextMenu extends Application {
     @Override
     public void start(Stage textStage) throws Exception {
 
-        textStage.setTitle("Hello World");
+        textStage.setTitle("Text Encryption");
         Button btn = new Button("Submit");
         AnchorPane root = new AnchorPane();
         GridPane texts = new GridPane();
