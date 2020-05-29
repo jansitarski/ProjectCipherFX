@@ -63,7 +63,13 @@ public class MainMenu extends Application {
         btnFile.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-
+                Stage fileStage = new Stage();
+                FileMenu fileMenu = new FileMenu();
+                try {
+                    fileMenu.start(fileStage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 
