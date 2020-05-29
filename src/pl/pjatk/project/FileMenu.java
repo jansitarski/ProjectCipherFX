@@ -91,8 +91,10 @@ public class FileMenu extends Application {
         Shared.genCopyright(root);
 
         Shared.setIcon(fileStage);
+
         root.getChildren().addAll(text, radio, buttons);
         Scene scene = new Scene(root, 600, 500);
+        Shared.setStyling(scene);
         fileStage.setScene(scene);
         fileStage.show();
 

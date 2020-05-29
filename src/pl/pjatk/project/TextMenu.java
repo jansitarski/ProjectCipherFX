@@ -80,6 +80,7 @@ public class TextMenu extends Application {
         Shared.setIcon(textStage);
         root.getChildren().addAll(texts, radio, btn);
         Scene scene = new Scene(root, 600, 500);
+        Shared.setStyling(scene);
         textStage.setScene(scene);
         textStage.show();
 

@@ -1,6 +1,7 @@
 package pl.pjatk.project;
 
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
@@ -8,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -61,5 +63,8 @@ abstract class Shared {
     }
     public static void setIcon(Stage stage) throws FileNotFoundException {
         stage.getIcons().add(new Image(new FileInputStream(".\\src\\pl\\pjatk\\img\\icon.png")));
+    }
+    public static void setStyling(Scene scene){
+        scene.getStylesheets().add((new File("src/pl/pjatk/style/style.css")).toURI().toString());
     }
 }

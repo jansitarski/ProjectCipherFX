@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -39,6 +41,7 @@ public class MainMenu extends Application {
         buttons.getChildren().addAll(btnText, btnFile);
         root.setTop(coverArt);
         BorderPane.setAlignment(coverArt,Pos.CENTER);
+        BorderPane.setMargin(coverArt, new Insets(25.0,0,0,0));
         root.setCenter(buttons);
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(15.0);
@@ -48,6 +51,8 @@ public class MainMenu extends Application {
         Shared.genCopyright(root);
 
         Shared.setIcon(primaryStage);
+
+        Shared.setStyling(menuScene);
         primaryStage.setScene(menuScene);
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> Platform.exit());
