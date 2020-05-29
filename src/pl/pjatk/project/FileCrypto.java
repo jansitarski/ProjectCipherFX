@@ -85,10 +85,14 @@ public class FileCrypto extends Crypto {
         char[] inputText = sb.toString().toUpperCase().toCharArray();
         sb = new StringBuilder();
         for (char letter : inputText) {
-            if (letter < 65 || letter > 90) {
-                throw new InputMismatchException("Only letters permitted");
+            if (letter == ' ') {
+                sb.append('%');
+            } else {
+                if (letter < 65 || letter > 90) {
+                    throw new InputMismatchException("Only letters permitted");
+                }
+                sb.append((char) ((letter - n + 65) % 26 + 65));
             }
-            sb.append((char) ((letter - n + 65) % 26 + 65));
         }
         encodedFile.write(sb.toString());
         encodedFile.close();
@@ -110,8 +114,11 @@ public class FileCrypto extends Crypto {
         char[] inputText = sb.toString().toUpperCase().toCharArray();
         sb = new StringBuilder();
         for (char letter : inputText) {
-            sb.append((char) ((letter + n - 65) % 26 + 65));
-
+            if(letter=='%'){
+                sb.append(' ');
+            }else {
+                sb.append((char) ((letter + n - 65) % 26 + 65));
+            }
         }
         System.out.println(sb.toString());
     }
