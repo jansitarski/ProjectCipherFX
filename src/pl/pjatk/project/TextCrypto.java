@@ -51,7 +51,11 @@ public class TextCrypto extends Crypto {
         StringBuilder sb = new StringBuilder();
         char[] inputText = text.toUpperCase().toCharArray();
         for (char letter : inputText) {
-            sb.append((char) ((letter + n - 65) % 26 + 65));
+            if(letter==' '){
+                sb.append('%');
+            }else {
+                sb.append((char) ((letter + n - 65) % 26 + 65));
+            }
         }
         return sb.toString();
     }
@@ -65,7 +69,11 @@ public class TextCrypto extends Crypto {
         StringBuilder sb = new StringBuilder();
         char[] inputText = text.toUpperCase().toCharArray();
         for (char letter : inputText) {
-            sb.append((char) ((letter - n + 65) % 26 + 65));
+            if(letter=='%'){
+                sb.append(' ');
+            }else {
+                sb.append((char) ((letter - n + 65) % 26 + 65));
+            }
         }
         return sb.toString();
     }
