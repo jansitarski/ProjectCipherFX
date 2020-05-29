@@ -49,14 +49,11 @@ public class FileMenu extends Application {
     private final RadioButton DESCipherRadio = new RadioButton("DES");
     private final TextField secretKeyFieldDES = new TextField();
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     @Override
     public void start(Stage fileStage) {
         fileStage.setTitle("File Encryption");
 
+        //File input
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHgrow(Priority.NEVER);
         ColumnConstraints col2 = new ColumnConstraints();
@@ -69,12 +66,15 @@ public class FileMenu extends Application {
         text.setVgap(5);
         text.setHgap(5);
 
+        //Set text Pane location
         AnchorPane.setTopAnchor(text, 50.0);
         AnchorPane.setLeftAnchor(text, 30.0);
         AnchorPane.setRightAnchor(text, 30.0);
 
+        //Generate radio Pane
         Shared.genRadio(radio,groupCrypt,caesarCipherRadio,caesarSpinner,AESCipherRadio,secretKeyFieldAES,DESCipherRadio,secretKeyFieldDES);
 
+        //Buttons
         buttons.getChildren().addAll(btnEncrypt,btnDecrypt);
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(5);
@@ -85,10 +85,12 @@ public class FileMenu extends Application {
         btnDecrypt.setDisable(true);
         btnEncrypt.setDisable(true);
 
+        //Set button Pane location
         AnchorPane.setBottomAnchor(buttons, 50.0);
         AnchorPane.setLeftAnchor(buttons, 30.0);
         AnchorPane.setRightAnchor(buttons, 30.0);
 
+        //import copyright footer
         Shared.genCopyright(root);
 
         root.getChildren().addAll(text, radio, buttons);
