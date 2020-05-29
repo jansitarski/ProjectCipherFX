@@ -10,10 +10,34 @@ import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import javax.swing.*;
+import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import static pl.pjatk.project.TextCrypto.*;
 
 public class FileMenu extends Application {
+    private SecretKey secretKey;
+    private File encryptedFile;
+    private File selectedFile;
+
+    private final Button btnEncrypt = new Button("Encrypt");
+    private final Button btnDecrypt = new Button("Decrypt");
+    private final Button btnFileChooser = new Button("Choose File");
+    private final AnchorPane root = new AnchorPane();
+    private final GridPane text = new GridPane();
+    private final GridPane radio = new GridPane();
+    private final HBox buttons = new HBox();
+    private final TextField fileChosen = new TextField();
+    private final ToggleGroup groupCrypt = new ToggleGroup();
+    private final FileChooser fileChooser = new FileChooser();
 
     public static void main(String[] args) {
         launch(args);
@@ -22,16 +46,6 @@ public class FileMenu extends Application {
     @Override
     public void start(Stage fileStage) {
         fileStage.setTitle("File Encryption");
-        Button btnEncrypt = new Button("Encrypt");
-        Button btnDecrypt = new Button("Decrypt");
-        Button btnFileChooser = new Button("Choose File");
-        AnchorPane root = new AnchorPane();
-        GridPane text = new GridPane();
-        GridPane radio = new GridPane();
-        HBox buttons = new HBox();
-        TextField fileChosen = new TextField();
-        ToggleGroup groupCrypt = new ToggleGroup();
-        FileChooser fileChooser = new FileChooser();
 
         ColumnConstraints col1 = new ColumnConstraints();
         col1.setHgrow(Priority.NEVER);
@@ -52,7 +66,7 @@ public class FileMenu extends Application {
         RadioButton caesarCipherRadio = new RadioButton("Caesar");
         caesarCipherRadio.setToggleGroup(groupCrypt);
         SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 25);
-        Spinner<Integer> caesarSpinner = new Spinner<Integer>();
+        Spinner<Integer> caesarSpinner = new Spinner<>();
         caesarSpinner.setValueFactory(valueFactory);
         RadioButton AESCipherRadio = new RadioButton("AES");
         AESCipherRadio.setToggleGroup(groupCrypt);
@@ -96,10 +110,119 @@ public class FileMenu extends Application {
         btnFileChooser.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                File selectedFile = fileChooser.showOpenDialog(fileStage);
-                    fileChosen.setText(selectedFile.getAbsolutePath());
-                    btnEncrypt.setDisable(false);
-                    btnDecrypt.setDisable(false);
+                selectedFile = fileChooser.showOpenDialog(fileStage);
+                fileChosen.setText(selectedFile.getAbsolutePath());
+                btnEncrypt.setDisable(false);
+                btnDecrypt.setDisable(false);
+            }
+        });
+
+        btnEncrypt.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                if (AESCipherRadio.isSelected()) {
+                    try {
+                        if (secretKeyFieldAES.getText().isBlank()) {
+
+                            //Generates SecretKey and decodes it for UI print.
+                            secretKey = KeyGenerator.getInstance("AES").generateKey();
+                            secretKeyFieldAES.setText(decodeKey(secretKey));
+
+                        } else {
+
+                            //If key exists, imports it form UI and encodes it.
+                            secretKey = encodeKeyAES(secretKeyFieldAES.getText());
+
+                        }
+                        FileCrypto encrypt = new FileCrypto(secretKey, "AES/CBC/PKCS5Padding");
+                        encryptedFile = new File(selectedFile.toString() + ".enc");
+                        encrypt.encrypt(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
+                    } catch (Exception o) {
+                        o.printStackTrace();
+                    }
+                }
+
+                //Caesar encrypt.
+
+                if (caesarCipherRadio.isSelected()) {
+                    FileCrypto encrypt = new FileCrypto();
+                    try {
+                        encrypt.encryptCaesar(selectedFile, (int) caesarSpinner.getValue());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //DES encrypt
+
+                if (DESCipherRadio.isSelected()) {
+                    try {
+                        if (secretKeyFieldDES.getText().isBlank()) {
+
+                            //Generates SecretKey and decodes it for UI print.
+                            secretKey = KeyGenerator.getInstance("DES").generateKey();
+                            secretKeyFieldDES.setText(decodeKey(secretKey));
+
+                        } else {
+
+                            //If key exists, imports it form UI and encodes it.
+                            secretKey = encodeKeyDES(secretKeyFieldDES.getText());
+
+                        }
+                        FileCrypto encryptDES = new FileCrypto(secretKey, "DES/CBC/PKCS5Padding");
+                        encryptedFile = new File(selectedFile.toString() + ".des");
+                        encryptDES.encrypt(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
+                    } catch (Exception o) {
+                        o.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        btnDecrypt.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                //AES decrypt
+
+                if (AESCipherRadio.isSelected()) {
+
+                    //Imports key from UI and encodes.
+                    secretKey = encodeKeyAES(secretKeyFieldAES.getText());
+
+                    try {
+                        FileCrypto decrypt = new FileCrypto(secretKey, "AES/CBC/PKCS5Padding");
+                        encryptedFile = new File(selectedFile.toString().substring(0, selectedFile.toString().length() - 4));
+                        decrypt.decrypt(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
+                    } catch (Exception o) {
+                        o.printStackTrace();
+                    }
+                }
+
+                //Caesar decrypt.
+
+                if (caesarCipherRadio.isSelected()) {
+                    FileCrypto decrypt = new FileCrypto();
+                    try {
+                        decrypt.decryptCaesar(selectedFile, (int) caesarSpinner.getValue());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                //DES decrypt
+
+                if (DESCipherRadio.isSelected()) {
+
+                    //Imports key from UI and encodes.
+                    secretKey = encodeKeyDES(secretKeyFieldDES.getText());
+                    try {
+                        FileCrypto decryptDES = new FileCrypto(secretKey, "DES/CBC/PKCS5Padding");
+                        encryptedFile = new File(selectedFile.toString().substring(0, selectedFile.toString().length() - 4));
+                        decryptDES.decryptDES(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
+                    } catch (IOException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }

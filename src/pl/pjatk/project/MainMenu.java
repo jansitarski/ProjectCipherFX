@@ -15,8 +15,21 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class MainMenu extends Application {
+    private final BorderPane root = new BorderPane();
+    private final VBox buttons = new VBox();
+    private final Scene menuScene = new Scene(root, 600, 500);
+    private final Button btnText = new Button("Text Encrypt");
+    private final Button btnFile = new Button("File Encrypt");
+    private final Image coverArtImage = new Image(new FileInputStream(".\\src\\pl\\pjatk\\project\\SplashScreenLogo.png"));
+    private final ImageView coverArt = new ImageView(coverArtImage);
+    private final Label copyright = new Label("\u00a9 Jan Sitarski s20701");
+
+    public MainMenu() throws FileNotFoundException {
+    }
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -24,14 +37,6 @@ public class MainMenu extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         primaryStage.setTitle("Main Menu");
-        BorderPane root = new BorderPane();
-        VBox buttons = new VBox();
-        Scene menuScene = new Scene(root, 600, 500);
-        Button btnText = new Button("Text Encrypt");
-        Button btnFile = new Button("File Encrypt");
-        Image coverArtImage = new Image(new FileInputStream(".\\src\\pl\\pjatk\\project\\SplashScreenLogo.png"));
-        ImageView coverArt = new ImageView(coverArtImage);
-        Label copyright = new Label("\u00a9 Jan Sitarski s20701");
 
         buttons.getChildren().addAll(btnText, btnFile);
         root.setTop(coverArt);
