@@ -77,6 +77,7 @@ public class TextMenu extends Application {
         //Import copyright footer
         Shared.genCopyright(root);
 
+        Shared.setIcon(textStage);
         root.getChildren().addAll(texts, radio, btn);
         Scene scene = new Scene(root, 600, 500);
         textStage.setScene(scene);

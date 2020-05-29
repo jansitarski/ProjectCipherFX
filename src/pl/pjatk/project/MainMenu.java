@@ -22,7 +22,7 @@ public class MainMenu extends Application {
     private final Scene menuScene = new Scene(root, 600, 500);
     private final Button btnText = new Button("Text Encrypt");
     private final Button btnFile = new Button("File Encrypt");
-    private final Image coverArtImage = new Image(new FileInputStream(".\\src\\pl\\pjatk\\project\\SplashScreenLogo.png"));
+    private final Image coverArtImage = new Image(new FileInputStream(".\\src\\pl\\pjatk\\img\\SplashScreenLogo.png"));
     private final ImageView coverArt = new ImageView(coverArtImage);
 
     public MainMenu() throws FileNotFoundException {
@@ -47,6 +47,7 @@ public class MainMenu extends Application {
 
         Shared.genCopyright(root);
 
+        Shared.setIcon(primaryStage);
         primaryStage.setScene(menuScene);
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> Platform.exit());

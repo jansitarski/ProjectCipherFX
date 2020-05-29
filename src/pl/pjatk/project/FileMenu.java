@@ -16,10 +16,7 @@ import javafx.stage.Stage;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -50,7 +47,7 @@ public class FileMenu extends Application {
     private final TextField secretKeyFieldDES = new TextField();
 
     @Override
-    public void start(Stage fileStage) {
+    public void start(Stage fileStage) throws FileNotFoundException {
         fileStage.setTitle("File Encryption");
 
         //File input
@@ -93,6 +90,7 @@ public class FileMenu extends Application {
         //import copyright footer
         Shared.genCopyright(root);
 
+        Shared.setIcon(fileStage);
         root.getChildren().addAll(text, radio, buttons);
         Scene scene = new Scene(root, 600, 500);
         fileStage.setScene(scene);
