@@ -6,6 +6,9 @@ import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -39,6 +42,13 @@ public class FileMenu extends Application {
     private final ToggleGroup groupCrypt = new ToggleGroup();
     private final FileChooser fileChooser = new FileChooser();
 
+    private final RadioButton caesarCipherRadio = new RadioButton("Caesar");
+    private final Spinner<Integer> caesarSpinner = new Spinner<>();
+    private final RadioButton AESCipherRadio = new RadioButton("AES");
+    private final TextField secretKeyFieldAES = new TextField();
+    private final RadioButton DESCipherRadio = new RadioButton("DES");
+    private final TextField secretKeyFieldDES = new TextField();
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -63,30 +73,7 @@ public class FileMenu extends Application {
         AnchorPane.setLeftAnchor(text, 30.0);
         AnchorPane.setRightAnchor(text, 30.0);
 
-        RadioButton caesarCipherRadio = new RadioButton("Caesar");
-        caesarCipherRadio.setToggleGroup(groupCrypt);
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 25);
-        Spinner<Integer> caesarSpinner = new Spinner<>();
-        caesarSpinner.setValueFactory(valueFactory);
-        RadioButton AESCipherRadio = new RadioButton("AES");
-        AESCipherRadio.setToggleGroup(groupCrypt);
-        TextField secretKeyFieldAES = new TextField();
-        RadioButton DESCipherRadio = new RadioButton("DES");
-        DESCipherRadio.setToggleGroup(groupCrypt);
-        TextField secretKeyFieldDES = new TextField();
-
-        radio.setVgap(5);
-        radio.setHgap(5);
-        radio.setAlignment(Pos.CENTER_LEFT);
-        radio.add(caesarCipherRadio, 0, 0);
-        radio.add(caesarSpinner, 1, 0);
-        radio.add(AESCipherRadio, 0, 1);
-        radio.add(secretKeyFieldAES, 1, 1);
-        radio.add(DESCipherRadio, 0, 2);
-        radio.add(secretKeyFieldDES, 1, 2);
-
-        AnchorPane.setBottomAnchor(radio, 200.0);
-        AnchorPane.setLeftAnchor(radio, 30.0);
+        Shared.genRadio(radio,groupCrypt,caesarCipherRadio,caesarSpinner,AESCipherRadio,secretKeyFieldAES,DESCipherRadio,secretKeyFieldDES);
 
         buttons.getChildren().addAll(btnEncrypt,btnDecrypt);
         buttons.setAlignment(Pos.CENTER);
@@ -101,6 +88,8 @@ public class FileMenu extends Application {
         AnchorPane.setBottomAnchor(buttons, 50.0);
         AnchorPane.setLeftAnchor(buttons, 30.0);
         AnchorPane.setRightAnchor(buttons, 30.0);
+
+        Shared.genCopyright(root);
 
         root.getChildren().addAll(text, radio, buttons);
         Scene scene = new Scene(root, 600, 500);

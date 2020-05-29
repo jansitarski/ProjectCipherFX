@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
-import javafx.scene.PerspectiveCamera;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -17,7 +16,7 @@ import javax.crypto.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
-import static pl.pjatk.project.Crypto.*;
+import static pl.pjatk.project.TextCrypto.*;
 
 public class TextMenu extends Application {
     private SecretKey secretKeyAES;
@@ -30,6 +29,13 @@ public class TextMenu extends Application {
     private final TextField input = new TextField();
     private final TextField output = new TextField();
     private final ToggleGroup groupCrypt = new ToggleGroup();
+
+    private final Spinner<Integer> caesarSpinner = new Spinner<>();
+    private final RadioButton caesarCipherRadio = new RadioButton("Caesar");
+    private final RadioButton AESCipherRadio = new RadioButton("AES");
+    private final TextField secretKeyFieldAES = new TextField();
+    private final RadioButton DESCipherRadio = new RadioButton("DES");
+    private final TextField secretKeyFieldDES = new TextField();
 
     public TextMenu() {
     }
@@ -54,33 +60,7 @@ public class TextMenu extends Application {
         texts.add(new Label("Output"), 0, 1);
         texts.add(output, 1, 1);
 
-        RadioButton caesarCipherRadio = new RadioButton("Caesar");
-        caesarCipherRadio.setToggleGroup(groupCrypt);
-        SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 25);
-        Spinner<Integer> caesarSpinner = new Spinner<Integer>();
-        caesarSpinner.setValueFactory(valueFactory);
-        RadioButton AESCipherRadio = new RadioButton("AES");
-        AESCipherRadio.setToggleGroup(groupCrypt);
-        TextField secretKeyFieldAES = new TextField();
-        RadioButton DESCipherRadio = new RadioButton("DES");
-        DESCipherRadio.setToggleGroup(groupCrypt);
-        TextField secretKeyFieldDES = new TextField();
-
-        radio.setVgap(5);
-        radio.setHgap(5);
-        radio.setAlignment(Pos.CENTER_LEFT);
-        radio.add(caesarCipherRadio, 0, 0);
-        radio.add(caesarSpinner, 1, 0);
-        radio.add(AESCipherRadio, 0, 1);
-        radio.add(secretKeyFieldAES, 1, 1);
-        radio.add(DESCipherRadio, 0, 2);
-        radio.add(secretKeyFieldDES, 1, 2);
-
-        root.getChildren().addAll(texts, radio, btn);
-
-        AnchorPane.setTopAnchor(radio, 250.0);
-        AnchorPane.setBottomAnchor(radio, 250.0);
-        AnchorPane.setLeftAnchor(radio, 30.0);
+        Shared.genRadio(radio, groupCrypt, caesarCipherRadio, caesarSpinner, AESCipherRadio, secretKeyFieldAES, DESCipherRadio, secretKeyFieldDES);
 
         AnchorPane.setBottomAnchor(btn, 50.0);
         AnchorPane.setLeftAnchor(btn, 30.0);
@@ -89,6 +69,10 @@ public class TextMenu extends Application {
         AnchorPane.setTopAnchor(texts, 50.0);
         AnchorPane.setLeftAnchor(texts, 30.0);
         AnchorPane.setRightAnchor(texts, 30.0);
+
+        Shared.genCopyright(root);
+
+        root.getChildren().addAll(texts, radio, btn);
         Scene scene = new Scene(root, 600, 500);
         textStage.setScene(scene);
         textStage.show();

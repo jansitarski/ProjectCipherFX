@@ -25,7 +25,6 @@ public class MainMenu extends Application {
     private final Button btnFile = new Button("File Encrypt");
     private final Image coverArtImage = new Image(new FileInputStream(".\\src\\pl\\pjatk\\project\\SplashScreenLogo.png"));
     private final ImageView coverArt = new ImageView(coverArtImage);
-    private final Label copyright = new Label("\u00a9 Jan Sitarski s20701");
 
     public MainMenu() throws FileNotFoundException {
     }
@@ -40,13 +39,14 @@ public class MainMenu extends Application {
 
         buttons.getChildren().addAll(btnText, btnFile);
         root.setTop(coverArt);
-        root.setBottom(copyright);
         BorderPane.setAlignment(coverArt,Pos.CENTER);
         root.setCenter(buttons);
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(15.0);
         btnFile.setPrefWidth(400.0);
         btnText.setPrefWidth(400.0);
+
+        Shared.genCopyright(root);
 
         primaryStage.setScene(menuScene);
         primaryStage.show();
