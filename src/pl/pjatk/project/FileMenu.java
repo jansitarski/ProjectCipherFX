@@ -53,7 +53,9 @@ public class FileMenu extends Application {
         col1.setHgrow(Priority.NEVER);
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setHgrow(Priority.ALWAYS);
-        text.getColumnConstraints().addAll(col1, col2);
+        ColumnConstraints col3 = new ColumnConstraints();
+        col2.setHgrow(Priority.SOMETIMES);
+        text.getColumnConstraints().addAll(col1, col2,col3);
         text.add(new Label("File Directory:"), 0, 0);
         text.add(fileChosen, 1, 0);
         text.add(btnFileChooser, 2, 0);
@@ -185,6 +187,7 @@ public class FileMenu extends Application {
                 FileCrypto decrypt = new FileCrypto();
                 try {
                     decrypt.decryptCaesar(selectedFile, (int) caesarSpinner.getValue());
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

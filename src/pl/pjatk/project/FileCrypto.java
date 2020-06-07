@@ -107,6 +107,7 @@ public class FileCrypto extends Crypto {
     public void decryptCaesar(File file, int n) throws IOException {
         StringBuilder sb = new StringBuilder();
         Scanner reader = new Scanner(file);
+        FileWriter decodedFile = new FileWriter(new File(file.toString().substring(0, file.toString().length() - 6)));
         while(reader.hasNextLine()){
             sb.append(reader.nextLine());
         }
@@ -119,7 +120,10 @@ public class FileCrypto extends Crypto {
             }else {
                 sb.append((char) ((letter + n - 65) % 26 + 65));
             }
+
         }
+        decodedFile.write(sb.toString());
+        decodedFile.close();
         System.out.println(sb.toString());
     }
 
