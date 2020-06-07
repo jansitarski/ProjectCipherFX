@@ -45,6 +45,7 @@ public class MainMenu extends Application {
         btnFile.setPrefWidth(400.0);
         btnText.setPrefWidth(400.0);
 
+        //Import copyright footer
         Shared.genCopyright(root);
 
         Shared.setIcon(primaryStage);
