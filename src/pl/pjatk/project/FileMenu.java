@@ -1,8 +1,6 @@
 package pl.pjatk.project;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -55,7 +53,7 @@ public class FileMenu extends Application {
         col1.setHgrow(Priority.NEVER);
         ColumnConstraints col2 = new ColumnConstraints();
         col2.setHgrow(Priority.ALWAYS);
-        text.getColumnConstraints().addAll(col1,col2);
+        text.getColumnConstraints().addAll(col1, col2);
         text.add(new Label("File Directory:"), 0, 0);
         text.add(fileChosen, 1, 0);
         text.add(btnFileChooser, 2, 0);
@@ -69,16 +67,16 @@ public class FileMenu extends Application {
         AnchorPane.setRightAnchor(text, 30.0);
 
         //Generate radio Pane
-        Shared.genRadio(radio,groupCrypt,caesarCipherRadio,caesarSpinner,AESCipherRadio,secretKeyFieldAES,DESCipherRadio,secretKeyFieldDES);
+        Shared.genRadio(radio, groupCrypt, caesarCipherRadio, caesarSpinner, AESCipherRadio, secretKeyFieldAES, DESCipherRadio, secretKeyFieldDES);
 
         //Buttons
-        buttons.getChildren().addAll(btnEncrypt,btnDecrypt);
+        buttons.getChildren().addAll(btnEncrypt, btnDecrypt);
         buttons.setAlignment(Pos.CENTER);
         buttons.setSpacing(5);
         btnEncrypt.setMaxWidth(400.0);
         btnDecrypt.setMaxWidth(100.0);
-        HBox.setHgrow(btnEncrypt,Priority.ALWAYS);
-        HBox.setHgrow(btnDecrypt,Priority.ALWAYS);
+        HBox.setHgrow(btnEncrypt, Priority.ALWAYS);
+        HBox.setHgrow(btnDecrypt, Priority.ALWAYS);
         btnDecrypt.setDisable(true);
         btnEncrypt.setDisable(true);
 
@@ -98,121 +96,112 @@ public class FileMenu extends Application {
         fileStage.setScene(scene);
         fileStage.show();
 
-        btnFileChooser.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                selectedFile = fileChooser.showOpenDialog(fileStage);
-                fileChosen.setText(selectedFile.getAbsolutePath());
-                btnEncrypt.setDisable(false);
-                btnDecrypt.setDisable(false);
-            }
+        btnFileChooser.setOnAction(actionEvent -> {
+            selectedFile = fileChooser.showOpenDialog(fileStage);
+            fileChosen.setText(selectedFile.getAbsolutePath());
+            btnEncrypt.setDisable(false);
+            btnDecrypt.setDisable(false);
         });
 
-        btnEncrypt.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                if (AESCipherRadio.isSelected()) {
-                    try {
-                        if (secretKeyFieldAES.getText().isBlank()) {
+        btnEncrypt.setOnAction(actionEvent -> {
+            if (AESCipherRadio.isSelected()) {
+                try {
+                    if (secretKeyFieldAES.getText().isBlank()) {
 
-                            //Generates SecretKey and decodes it for UI print.
-                            secretKey = KeyGenerator.getInstance("AES").generateKey();
-                            secretKeyFieldAES.setText(decodeKey(secretKey));
+                        //Generates SecretKey and decodes it for UI print.
+                        secretKey = KeyGenerator.getInstance("AES").generateKey();
+                        secretKeyFieldAES.setText(decodeKey(secretKey));
 
-                        } else {
+                    } else {
 
-                            //If key exists, imports it form UI and encodes it.
-                            secretKey = encodeKeyAES(secretKeyFieldAES.getText());
+                        //If key exists, imports it form UI and encodes it.
+                        secretKey = encodeKeyAES(secretKeyFieldAES.getText());
 
-                        }
-                        FileCrypto encrypt = new FileCrypto(secretKey, "AES/CBC/PKCS5Padding");
-                        encryptedFile = new File(selectedFile.toString() + ".enc");
-                        encrypt.encrypt(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
-                    } catch (Exception o) {
-                        o.printStackTrace();
                     }
+                    FileCrypto encrypt = new FileCrypto(secretKey, "AES/CBC/PKCS5Padding");
+                    encryptedFile = new File(selectedFile.toString() + ".enc");
+                    encrypt.encrypt(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
+                } catch (Exception o) {
+                    o.printStackTrace();
                 }
+            }
 
-                //Caesar encrypt.
+            //Caesar encrypt.
 
-                if (caesarCipherRadio.isSelected()) {
-                    FileCrypto encrypt = new FileCrypto();
-                    try {
-                        encrypt.encryptCaesar(selectedFile, (int) caesarSpinner.getValue());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            if (caesarCipherRadio.isSelected()) {
+                FileCrypto encrypt = new FileCrypto();
+                try {
+                    encrypt.encryptCaesar(selectedFile, (int) caesarSpinner.getValue());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            }
 
-                //DES encrypt
+            //DES encrypt
 
-                if (DESCipherRadio.isSelected()) {
-                    try {
-                        if (secretKeyFieldDES.getText().isBlank()) {
+            if (DESCipherRadio.isSelected()) {
+                try {
+                    if (secretKeyFieldDES.getText().isBlank()) {
 
-                            //Generates SecretKey and decodes it for UI print.
-                            secretKey = KeyGenerator.getInstance("DES").generateKey();
-                            secretKeyFieldDES.setText(decodeKey(secretKey));
+                        //Generates SecretKey and decodes it for UI print.
+                        secretKey = KeyGenerator.getInstance("DES").generateKey();
+                        secretKeyFieldDES.setText(decodeKey(secretKey));
 
-                        } else {
+                    } else {
 
-                            //If key exists, imports it form UI and encodes it.
-                            secretKey = encodeKeyDES(secretKeyFieldDES.getText());
+                        //If key exists, imports it form UI and encodes it.
+                        secretKey = encodeKeyDES(secretKeyFieldDES.getText());
 
-                        }
-                        FileCrypto encryptDES = new FileCrypto(secretKey, "DES/CBC/PKCS5Padding");
-                        encryptedFile = new File(selectedFile.toString() + ".des");
-                        encryptDES.encrypt(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
-                    } catch (Exception o) {
-                        o.printStackTrace();
                     }
+                    FileCrypto encryptDES = new FileCrypto(secretKey, "DES/CBC/PKCS5Padding");
+                    encryptedFile = new File(selectedFile.toString() + ".des");
+                    encryptDES.encrypt(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
+                } catch (Exception o) {
+                    o.printStackTrace();
                 }
             }
         });
 
-        btnDecrypt.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                //AES decrypt
+        btnDecrypt.setOnAction(actionEvent -> {
+            //AES decrypt
 
-                if (AESCipherRadio.isSelected()) {
+            if (AESCipherRadio.isSelected()) {
 
-                    //Imports key from UI and encodes.
-                    secretKey = encodeKeyAES(secretKeyFieldAES.getText());
+                //Imports key from UI and encodes.
+                secretKey = encodeKeyAES(secretKeyFieldAES.getText());
 
-                    try {
-                        FileCrypto decrypt = new FileCrypto(secretKey, "AES/CBC/PKCS5Padding");
-                        encryptedFile = new File(selectedFile.toString().substring(0, selectedFile.toString().length() - 4));
-                        decrypt.decrypt(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
-                    } catch (Exception o) {
-                        o.printStackTrace();
-                    }
+                try {
+                    FileCrypto decrypt = new FileCrypto(secretKey, "AES/CBC/PKCS5Padding");
+                    encryptedFile = new File(selectedFile.toString().substring(0, selectedFile.toString().length() - 4));
+                    decrypt.decrypt(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
+                } catch (Exception o) {
+                    o.printStackTrace();
                 }
+            }
 
-                //Caesar decrypt.
+            //Caesar decrypt.
 
-                if (caesarCipherRadio.isSelected()) {
-                    FileCrypto decrypt = new FileCrypto();
-                    try {
-                        decrypt.decryptCaesar(selectedFile, (int) caesarSpinner.getValue());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+            if (caesarCipherRadio.isSelected()) {
+                FileCrypto decrypt = new FileCrypto();
+                try {
+                    decrypt.decryptCaesar(selectedFile, (int) caesarSpinner.getValue());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
+            }
 
-                //DES decrypt
+            //DES decrypt
 
-                if (DESCipherRadio.isSelected()) {
+            if (DESCipherRadio.isSelected()) {
 
-                    //Imports key from UI and encodes.
-                    secretKey = encodeKeyDES(secretKeyFieldDES.getText());
-                    try {
-                        FileCrypto decryptDES = new FileCrypto(secretKey, "DES/CBC/PKCS5Padding");
-                        encryptedFile = new File(selectedFile.toString().substring(0, selectedFile.toString().length() - 4));
-                        decryptDES.decryptDES(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
-                    } catch (IOException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    }
+                //Imports key from UI and encodes.
+                secretKey = encodeKeyDES(secretKeyFieldDES.getText());
+                try {
+                    FileCrypto decryptDES = new FileCrypto(secretKey, "DES/CBC/PKCS5Padding");
+                    encryptedFile = new File(selectedFile.toString().substring(0, selectedFile.toString().length() - 4));
+                    decryptDES.decryptDES(new FileInputStream(selectedFile), new FileOutputStream(encryptedFile));
+                } catch (IOException | InvalidAlgorithmParameterException | InvalidKeyException | NoSuchPaddingException | NoSuchAlgorithmException e) {
+                    e.printStackTrace();
                 }
             }
         });

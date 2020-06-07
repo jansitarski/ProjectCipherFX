@@ -1,8 +1,6 @@
 package pl.pjatk.project;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -84,82 +82,79 @@ public class TextMenu extends Application {
         textStage.setScene(scene);
         textStage.show();
 
-        btn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
+        btn.setOnAction(actionEvent -> {
 
-                if (caesarCipherRadio.isSelected()) {
-                    StringBuilder sb = new StringBuilder();
-                    int n = (int) caesarSpinner.getValue();
-                    if (!input.getText().equals("")) {
-                        TextCrypto encrypt = new TextCrypto();
-                        output.setText(encrypt.encryptCaesar(input.getText(), n));
-                    } else {
-                        TextCrypto decrypt = new TextCrypto();
-                        input.setText(decrypt.decryptCaesar(output.getText(), n));
+            if (caesarCipherRadio.isSelected()) {
+                StringBuilder sb = new StringBuilder();
+                int n = (int) caesarSpinner.getValue();
+                if (!input.getText().equals("")) {
+                    TextCrypto encrypt = new TextCrypto();
+                    output.setText(encrypt.encryptCaesar(input.getText(), n));
+                } else {
+                    TextCrypto decrypt = new TextCrypto();
+                    input.setText(decrypt.decryptCaesar(output.getText(), n));
+                }
+            }
+
+            if (AESCipherRadio.isSelected()) {
+                if (!input.getText().equals("")) {
+                    try {
+                        if (secretKeyFieldAES.getText().equals("")) {
+
+                            //Generates SecretKey and decodes it for UI print.
+
+                            secretKeyAES = KeyGenerator.getInstance("AES").generateKey();
+                            secretKeyFieldAES.setText(decodeKey(secretKeyAES));
+                        } else {
+
+                            //If key exists, imports it form UI and encodes it.
+
+                            secretKeyAES = encodeKeyAES(secretKeyFieldAES.getText());
+                        }
+                        //I cant be fucked with doing padding therefore plain AES
+                        TextCrypto encrypt = new TextCrypto(secretKeyAES, "AES");
+                        output.setText(encrypt.encrypt(input.getText()));
+
+                    } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        TextCrypto decrypt = new TextCrypto(secretKeyAES, "AES");
+                        input.setText(decrypt.decrypt(output.getText()));
+                    } catch (NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | InvalidKeyException | BadPaddingException e) {
+                        e.printStackTrace();
                     }
                 }
+            }
+            if (DESCipherRadio.isSelected()) {
+                if (!input.getText().equals("")) {
+                    try {
+                        if (secretKeyFieldDES.getText().equals("")) {
 
-                if (AESCipherRadio.isSelected()) {
-                    if (!input.getText().equals("")) {
-                        try {
-                            if (secretKeyFieldAES.getText().equals("")) {
+                            //Generates SecretKey and decodes it for UI print.
 
-                                //Generates SecretKey and decodes it for UI print.
+                            secretKeyDES = KeyGenerator.getInstance("DES").generateKey();
+                            secretKeyFieldDES.setText(decodeKey(secretKeyDES));
+                        } else {
 
-                                secretKeyAES = KeyGenerator.getInstance("AES").generateKey();
-                                secretKeyFieldAES.setText(decodeKey(secretKeyAES));
-                            } else {
+                            //If key exists, imports it form UI and encodes it.
 
-                                //If key exists, imports it form UI and encodes it.
-
-                                secretKeyAES = encodeKeyAES(secretKeyFieldAES.getText());
-                            }
-                            //I cant be fucked with doing padding therefore plain AES
-                            TextCrypto encrypt = new TextCrypto(secretKeyAES, "AES");
-                            output.setText(encrypt.encrypt(input.getText()));
-
-                        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
-                            e.printStackTrace();
+                            secretKeyDES = encodeKeyDES(secretKeyFieldDES.getText());
                         }
-                    } else {
-                        try {
-                            TextCrypto decrypt = new TextCrypto(secretKeyAES, "AES");
-                            input.setText(decrypt.decrypt(output.getText()));
-                        } catch (NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | InvalidKeyException | BadPaddingException e) {
-                            e.printStackTrace();
-                        }
+                        //I cant be fucked with doing padding therefore plain DES
+                        TextCrypto encrypt = new TextCrypto(secretKeyDES, "DES");
+                        output.setText(encrypt.encrypt(input.getText()));
+
+                    } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+                        e.printStackTrace();
                     }
-                }
-                if (DESCipherRadio.isSelected()) {
-                    if (!input.getText().equals("")) {
-                        try {
-                            if (secretKeyFieldDES.getText().equals("")) {
-
-                                //Generates SecretKey and decodes it for UI print.
-
-                                secretKeyDES = KeyGenerator.getInstance("DES").generateKey();
-                                secretKeyFieldDES.setText(decodeKey(secretKeyDES));
-                            } else {
-
-                                //If key exists, imports it form UI and encodes it.
-
-                                secretKeyDES = encodeKeyDES(secretKeyFieldDES.getText());
-                            }
-                            //I cant be fucked with doing padding therefore plain DES
-                            TextCrypto encrypt = new TextCrypto(secretKeyDES, "DES");
-                            output.setText(encrypt.encrypt(input.getText()));
-
-                        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        try {
-                            TextCrypto decrypt = new TextCrypto(secretKeyDES, "DES");
-                            input.setText(decrypt.decrypt(output.getText()));
-                        } catch (NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | InvalidKeyException | BadPaddingException e) {
-                            e.printStackTrace();
-                        }
+                } else {
+                    try {
+                        TextCrypto decrypt = new TextCrypto(secretKeyDES, "DES");
+                        input.setText(decrypt.decrypt(output.getText()));
+                    } catch (NoSuchPaddingException | NoSuchAlgorithmException | IllegalBlockSizeException | InvalidKeyException | BadPaddingException e) {
+                        e.printStackTrace();
                     }
                 }
             }

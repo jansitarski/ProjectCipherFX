@@ -2,8 +2,6 @@ package pl.pjatk.project;
 
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,7 +12,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -57,29 +54,23 @@ public class MainMenu extends Application {
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> Platform.exit());
 
-        btnText.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Stage textStage = new Stage();
-                TextMenu textMenu = new TextMenu();
-                try {
-                    textMenu.start(textStage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        btnText.setOnAction(actionEvent -> {
+            Stage textStage = new Stage();
+            TextMenu textMenu = new TextMenu();
+            try {
+                textMenu.start(textStage);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
-        btnFile.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                Stage fileStage = new Stage();
-                FileMenu fileMenu = new FileMenu();
-                try {
-                    fileMenu.start(fileStage);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        btnFile.setOnAction(actionEvent -> {
+            Stage fileStage = new Stage();
+            FileMenu fileMenu = new FileMenu();
+            try {
+                fileMenu.start(fileStage);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
