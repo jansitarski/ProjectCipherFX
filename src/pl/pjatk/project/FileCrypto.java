@@ -10,7 +10,6 @@ import java.io.*;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class FileCrypto extends Crypto {
@@ -87,10 +86,14 @@ public class FileCrypto extends Crypto {
         for (char letter : inputText) {
             if (letter == ' ') {
                 sb.append('%');
-            } else {
-                if (letter < 65 || letter > 90) {
-                    throw new InputMismatchException("Only letters permitted");
-                }
+            } else if(letter == ','){
+                sb.append(',');
+            }else if(letter == '.'){
+                sb.append('.');
+            }else{
+                //if (letter < 65 || letter > 90) {
+                //    throw new InputMismatchException("Only letters permitted");
+                //}
                 sb.append((char) ((letter - n + 65) % 26 + 65));
             }
         }
@@ -117,6 +120,10 @@ public class FileCrypto extends Crypto {
         for (char letter : inputText) {
             if(letter=='%'){
                 sb.append(' ');
+            } else if(letter == ','){
+                sb.append(',');
+            }else if(letter == '.'){
+                sb.append('.');
             }else {
                 sb.append((char) ((letter + n - 65) % 26 + 65));
             }
