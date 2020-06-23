@@ -62,7 +62,7 @@ abstract class Shared {
         AnchorPane.setLeftAnchor(radio, 30.0);
     }
     public static void setIcon(Stage stage) throws FileNotFoundException {
-        stage.getIcons().add(new Image(new FileInputStream(".\\src\\pl\\pjatk\\img\\icon.png")));
+        stage.getIcons().add(new Image(new FileInputStream("./src/pl/pjatk/img/icon.png")));
     }
     public static void setStyling(Scene scene){
         scene.getStylesheets().add((new File("src/pl/pjatk/style/style.css")).toURI().toString());
